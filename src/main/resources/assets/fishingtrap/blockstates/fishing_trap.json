@@ -1,6 +1,7 @@
 {
   "variants": {
-    "waterlogged=false": { "model": "fishingtrap:block/fishing_trap" },
-    "waterlogged=true":  { "model": "fishingtrap:block/fishing_trap" }
+    "": { "model": "fishingtrap:block/fishing_trap" },
+    "waterlogged=true":  { "model": "fishingtrap:block/fishing_trap" },
+    "waterlogged=false":  { "model": "fishingtrap:block/fishing_trap" }
   }
 }
