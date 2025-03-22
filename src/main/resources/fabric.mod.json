@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "fishingtrap",
+	"version": "${version}",
+	"name": "Fishing Trap",
+	"description": "Fish Trap Mod",
+	"authors": [
+		"Infvoid"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/fishingtrap/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.infvoid.fishingtrap.FishingTrap"
+		],
+		"fabric-datagen": [
+			"net.infvoid.fishingtrap.FishingTrapDataGenerator"
+		],
+		"client": [
+			"net.infvoid.fishingtrap.FishingTrapClient"
+		]
+	},
+	"mixins": [
+		"fishingtrap.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
