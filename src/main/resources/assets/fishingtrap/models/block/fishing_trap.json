@@ -1,12 +1,13 @@
 {
+  "render_type": "cutout",
   "textures": {
-    "7": "fishing_trap_back",
-    "8": "fishing_trap_bottom",
-    "9": "fishing_trap_front",
-    "11": "fishing_trap_side",
-    "12": "fishing_trap_top",
-    "13": "handle",
-    "particle": "fishing_trap_back"
+    "7": "fishingtrap:block/fishing_trap_back",
+    "8": "fishingtrap:block/fishing_trap_bottom",
+    "9": "fishingtrap:block/fishing_trap_front",
+    "11": "fishingtrap:block/fishing_trap_side",
+    "12": "fishingtrap:block/fishing_trap_top",
+    "13": "fishingtrap:block/handle",
+    "particle": "fishingtrap:block/fishing_trap_back"
   },
   "elements": [
     {

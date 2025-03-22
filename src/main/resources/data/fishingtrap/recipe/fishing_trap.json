@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "plank slab plank",
+    "iron  empty iron",
+    "plank slab plank"
+  ],
+  "key": {
+    "plank": {
+      "tag": "minecraft:planks"
+    },
+    "slab": {
+      "tag": "minecraft:slabs"
+    },
+    "iron": {
+      "item": "minecraft:iron_ingot"
+    },
+    "empty": {
+      "item": "minecraft:air"
+    }
+  },
+  "result": {
+    "item": "fishingtrap:fishing_trap",
+    "count": 1
+  }
+}
