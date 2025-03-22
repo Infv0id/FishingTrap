@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
 
     public static final Block FISHING_TRAP = registerBlock("fishing_trap",new Block(AbstractBlock.Settings.create()
-            .strength(2.0f)
+            .strength(0.5f)
             .nonOpaque()
             .sounds(BlockSoundGroup.WOOD)
 
