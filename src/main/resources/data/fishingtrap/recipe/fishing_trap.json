@@ -1,26 +1,29 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "plank slab plank",
-    "iron  empty iron",
-    "plank slab plank"
-  ],
+  "category": "misc",
+
   "key": {
-    "plank": {
-      "tag": "minecraft:planks"
+    "#": {
+      "item": "minecraft:oak_planks"
     },
-    "slab": {
-      "tag": "minecraft:slabs"
+    "*": {
+      "item": "minecraft:oak_slab"
     },
-    "iron": {
+    "$": {
       "item": "minecraft:iron_ingot"
-    },
-    "empty": {
-      "item": "minecraft:air"
     }
   },
+
+
+  "pattern": [
+    "#*#",
+    "$ $",
+    "#*#"
+  ],
+
   "result": {
-    "item": "fishingtrap:fishing_trap",
-    "count": 1
+    "count": 1,
+    "id": "fishingtrap:fishing_trap"
+
   }
 }
