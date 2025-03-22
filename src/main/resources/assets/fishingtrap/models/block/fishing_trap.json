@@ -1,0 +1,40 @@
+{
+  "textures": {
+    "7": "fishing_trap_back",
+    "8": "fishing_trap_bottom",
+    "9": "fishing_trap_front",
+    "11": "fishing_trap_side",
+    "12": "fishing_trap_top",
+    "13": "handle",
+    "particle": "fishing_trap_back"
+  },
+  "elements": [
+    {
+      "name": "net_base",
+      "from": [0, 0, 3],
+      "to": [16, 10, 13],
+      "rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 4]},
+      "faces": {
+        "north": {"uv": [0, 3, 16, 13], "texture": "#7"},
+        "east": {"uv": [3, 3, 13, 13], "texture": "#11"},
+        "south": {"uv": [0, 3, 16, 13], "texture": "#9"},
+        "west": {"uv": [3, 3, 13, 13], "texture": "#11"},
+        "up": {"uv": [0, 3, 16, 13], "texture": "#12"},
+        "down": {"uv": [0, 3, 16, 13], "texture": "#8"}
+      }
+    },
+    {
+      "from": [4, 10, 7],
+      "to": [12, 12, 9],
+      "rotation": {"angle": 0, "axis": "y", "origin": [7, 10, 6]},
+      "faces": {
+        "north": {"uv": [0, 6, 8, 8], "texture": "#13"},
+        "east": {"uv": [8, 0, 11, 2], "texture": "#13"},
+        "south": {"uv": [0, 8, 8, 10], "texture": "#13"},
+        "west": {"uv": [8, 2, 11, 4], "texture": "#13"},
+        "up": {"uv": [8, 3, 0, 0], "texture": "#13"},
+        "down": {"uv": [8, 3, 0, 6], "texture": "#13"}
+      }
+    }
+  ]
+}
