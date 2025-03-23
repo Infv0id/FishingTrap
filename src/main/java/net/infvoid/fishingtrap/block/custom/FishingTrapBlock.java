@@ -60,6 +60,13 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
         return CODEC;
     }
 
+
+    @Override
+    protected BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+
     private boolean isUnderwater(BlockView world, BlockPos pos) {
         FluidState fluidState = world.getFluidState(pos);
         return fluidState.getFluid() == Fluids.WATER;
