@@ -39,17 +39,37 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
         ItemStack bait = entity.getStack(0);
 
         if (!bait.isEmpty() && (bait.isOf(Items.ROTTEN_FLESH) || bait.isOf(Items.SPIDER_EYE))) {
-            if (world.getTime() % 100 == 0) { // Every 5 seconds
-                bait.decrement(1);
-                entity.setStack(0, bait.copy());
+            if (world.getTime() % 100 == 0) {
+                ItemStack fish = new ItemStack(Items.COD);
+                boolean inserted = false;
 
-                ItemStack fish = new ItemStack(Items.COD); // You can replace with loot table logic
-                world.spawnEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, fish));
+                for (int i = 1; i <= 9; i++) {
+                    ItemStack slot = entity.getStack(i);
 
-                entity.markDirty(); // Save to disk
+                    if (slot.isEmpty()) {
+                        entity.setStack(i, fish.copy());
+                        inserted = true;
+                        break;
+                    }
+
+                    if (slot.getItem() == fish.getItem() && slot.getCount() < slot.getMaxCount()) {
+                        slot.increment(1);
+                        inserted = true;
+                        break;
+                    }
+                }
+
+                if (inserted) {
+                    bait.decrement(1);
+                    entity.setStack(0, bait);
+                    entity.markDirty();
+                }
             }
         }
     }
+
+
+
 
     @Override
     public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registryLookup) {

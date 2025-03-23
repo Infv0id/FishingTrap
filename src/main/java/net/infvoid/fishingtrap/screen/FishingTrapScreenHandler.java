@@ -24,10 +24,19 @@ public class FishingTrapScreenHandler extends ScreenHandler {
         // Bait Slot (centered)
         this.addSlot(new Slot(inventory, 0, 81, 15)); // SLOT 0
 
-        // 9 fish output slots (slots 1–9) in a horizontal row
         for (int i = 0; i < 9; i++) {
-            this.addSlot(new Slot(inventory, i + 1, 8 + i * 18, 48));
+            int index = i + 1;
+            int x = 8 + i * 18;
+            int y = 48;
+
+            this.addSlot(new Slot(inventory, index, x, y) {
+                @Override
+                public boolean canInsert(ItemStack stack) {
+                    return false; // ❌ Don't allow manual insert
+                }
+            });
         }
+
 
 
         // Add player inventory (3 rows of 9)
