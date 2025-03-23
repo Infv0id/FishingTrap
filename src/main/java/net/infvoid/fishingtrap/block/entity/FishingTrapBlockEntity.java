@@ -1,19 +1,27 @@
 package net.infvoid.fishingtrap.block.entity;
 
 import net.infvoid.fishingtrap.block.ModBlockEntities;
+import net.infvoid.fishingtrap.screen.FishingTrapScreenHandler;
 import net.infvoid.fishingtrap.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
-public class FishingTrapBlockEntity extends BlockEntity implements ImplementedInventory {
+public class FishingTrapBlockEntity extends BlockEntity implements ImplementedInventory, NamedScreenHandlerFactory {
 
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY); // One bait slot
 
@@ -57,4 +65,19 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
     public DefaultedList<ItemStack> getItems() {
         return inventory;
     }
+
+
+
+
+
+    @Override
+    public Text getDisplayName() {
+        return Text.literal("Fishing Trap");
+    }
+
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new FishingTrapScreenHandler(syncId, playerInventory, this.getPos());
+    }
+
 }
