@@ -11,10 +11,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import net.infvoid.fishingtrap.block.custom.FishingTrapBlock;
+
+
 
 public class ModBlocks {
 
-    public static final Block FISHING_TRAP = registerBlock("fishing_trap",new Block(AbstractBlock.Settings.create()
+    public static final Block FISHING_TRAP = registerBlock("fishing_trap",new FishingTrapBlock(AbstractBlock.Settings.create()
             .strength(0.5f)
             .nonOpaque()
             .sounds(BlockSoundGroup.WOOD)
