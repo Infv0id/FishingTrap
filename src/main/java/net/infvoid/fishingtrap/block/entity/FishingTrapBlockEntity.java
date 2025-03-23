@@ -6,41 +6,50 @@ import net.infvoid.fishingtrap.screen.FishingTrapScreenHandler;
 import net.infvoid.fishingtrap.util.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 public class FishingTrapBlockEntity extends BlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10  , ItemStack.EMPTY); // One bait slot
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY); // 0 = bait, 1-9 = fish
+
+    private static final Set<Item> VALID_BAIT = Set.of(
+            Items.ROTTEN_FLESH, Items.SWEET_BERRIES, Items.CARROT,
+            Items.BEETROOT, Items.MELON_SLICE, Items.BREAD
+    );
+
+    private static final List<Item> POSSIBLE_FISH = List.of(
+            Items.COD, Items.SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH
+    );
 
     public FishingTrapBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FISHING_TRAP_BLOCK_ENTITY, pos, state);
     }
 
-    // Called every tick
     public static void tick(World world, BlockPos pos, BlockState state, FishingTrapBlockEntity entity) {
         if (world.isClient()) return;
 
         ItemStack bait = entity.getStack(0);
 
-        if (!bait.isEmpty() && (bait.isOf(Items.ROTTEN_FLESH) || bait.isOf(Items.SPIDER_EYE))) {
+        if (!bait.isEmpty() && VALID_BAIT.contains(bait.getItem())) {
             if (world.getTime() % 100 == 0) {
-                ItemStack fish = new ItemStack(Items.COD);
+                // Pick a random fish
+                ItemStack fish = new ItemStack(POSSIBLE_FISH.get(world.getRandom().nextInt(POSSIBLE_FISH.size())));
                 boolean inserted = false;
 
                 for (int i = 1; i <= 9; i++) {
@@ -68,9 +77,6 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
         }
     }
 
-
-
-
     @Override
     public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registryLookup) {
         Inventories.readNbt(nbt, this.inventory, registryLookup);
@@ -83,15 +89,10 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
         super.writeNbt(nbt, registryLookup);
     }
 
-
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventory;
     }
-
-
-
-
 
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
@@ -103,11 +104,8 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
         return Text.literal("Fishing Trap");
     }
 
-
     @Override
-    public Object getScreenOpeningData(ServerPlayerEntity serverPlayerEntity) {
+    public Object getScreenOpeningData(ServerPlayerEntity player) {
         return this.getPos();
     }
 }
-
-
