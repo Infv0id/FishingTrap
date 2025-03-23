@@ -20,6 +20,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -33,9 +34,20 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
             Items.BEETROOT, Items.MELON_SLICE, Items.BREAD
     );
 
-    private static final List<Item> POSSIBLE_FISH = List.of(
-            Items.COD, Items.SALMON, Items.PUFFERFISH, Items.TROPICAL_FISH
-    );
+    private static final List<Item> POSSIBLE_FISH = new ArrayList<>();
+
+    static {
+        for (int i = 0; i < 48; i++) {
+            POSSIBLE_FISH.add(Items.COD);
+            POSSIBLE_FISH.add(Items.SALMON);
+        }
+        for (int i = 0; i < 2; i++) {
+            POSSIBLE_FISH.add(Items.PUFFERFISH);
+            POSSIBLE_FISH.add(Items.TROPICAL_FISH);
+        }
+    }
+
+
 
     public FishingTrapBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FISHING_TRAP_BLOCK_ENTITY, pos, state);
