@@ -10,10 +10,12 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
@@ -34,6 +36,11 @@ import net.minecraft.block.BlockState;
 
 
 public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
+
+
+
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
 
 
     public static final MapCodec<FishingTrapBlock> CODEC = BlockWithEntity.createCodec(FishingTrapBlock::new);
@@ -111,10 +118,13 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
 
     // Place waterlogged if underwater
     @Override
-    public BlockState getPlacementState(net.minecraft.item.ItemPlacementContext ctx) {
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         boolean water = fluidState.getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, water);
+        Direction playerFacing = ctx.getHorizontalPlayerFacing();
+        return this.getDefaultState()
+                .with(WATERLOGGED, water)
+                .with(FACING, playerFacing.getOpposite());
     }
 
     // Controls water rendering
@@ -126,8 +136,9 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
     // Register WATERLOGGED property
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
+        builder.add(WATERLOGGED, FACING);
     }
+
 
 
     // Match model parts:
@@ -142,13 +153,14 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE; // what shows when hovering with the mouse
+        return rotateShape(state.get(FACING), SHAPE);
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return SHAPE; // what the player collides with
+        return rotateShape(state.get(FACING), SHAPE);
     }
+
 
 
     @Override
@@ -179,6 +191,30 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
             }
             super.onStateReplaced(state, world, pos, newState, moved);
         }
+    }
+
+
+    private static VoxelShape rotateShape(Direction direction, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
+        for (int i = 0; i < 4; i++) {
+            if (i > 0) {
+                buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                    buffer[1] = VoxelShapes.union(
+                            buffer[1],
+                            VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)
+                    );
+                });
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();
+            }
+
+            if (direction == Direction.fromHorizontal(i)) {
+                return buffer[0];
+            }
+        }
+
+        return shape;
     }
 
 

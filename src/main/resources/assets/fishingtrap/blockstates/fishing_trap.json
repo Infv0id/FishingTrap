@@ -1,6 +1,13 @@
 {
   "variants": {
-    "waterlogged=true": { "model": "fishingtrap:block/fishing_trap" },
-    "waterlogged=false": { "model": "fishingtrap:block/fishing_trap" }
+    "facing=north,waterlogged=false": { "model": "fishingtrap:block/fishing_trap" },
+    "facing=south,waterlogged=false": { "model": "fishingtrap:block/fishing_trap", "y": 180 },
+    "facing=west,waterlogged=false":  { "model": "fishingtrap:block/fishing_trap", "y": 270 },
+    "facing=east,waterlogged=false":  { "model": "fishingtrap:block/fishing_trap", "y": 90 },
+
+    "facing=north,waterlogged=true": { "model": "fishingtrap:block/fishing_trap" },
+    "facing=south,waterlogged=true": { "model": "fishingtrap:block/fishing_trap", "y": 180 },
+    "facing=west,waterlogged=true":  { "model": "fishingtrap:block/fishing_trap", "y": 270 },
+    "facing=east,waterlogged=true":  { "model": "fishingtrap:block/fishing_trap", "y": 90 }
   }
 }
