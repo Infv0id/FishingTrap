@@ -27,6 +27,18 @@ import java.util.Set;
 
 public class FishingTrapBlockEntity extends BlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory {
 
+    private static boolean isValidBait(ItemStack bait) {
+        return VALID_BAIT.contains(bait.getItem());
+    }
+
+
+    private int fishingCooldown = getNewCooldown(); // ticks left until next catch
+
+    private static int getNewCooldown() {
+        return 600 + new Random().nextInt(1801); // 600 to 2400 ticks (30s to 2min)
+    }
+
+
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10, ItemStack.EMPTY); // 0 = bait, 1-9 = fish
 
     private static final Set<Item> VALID_BAIT = Set.of(
@@ -37,12 +49,11 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
     private static final List<Item> POSSIBLE_FISH = new ArrayList<>();
 
     static {
-        for (int i = 0; i < 48; i++) {
+        for (int i = 0; i < 96; i++) {
             POSSIBLE_FISH.add(Items.COD);
             POSSIBLE_FISH.add(Items.SALMON);
         }
-        for (int i = 0; i < 2; i++) {
-            POSSIBLE_FISH.add(Items.PUFFERFISH);
+        for (int i = 0; i < 1; i++) {
             POSSIBLE_FISH.add(Items.TROPICAL_FISH);
         }
     }
@@ -58,9 +69,10 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
 
         ItemStack bait = entity.getStack(0);
 
-        if (!bait.isEmpty() && VALID_BAIT.contains(bait.getItem())) {
-            if (world.getTime() % 100 == 0) {
-                // Pick a random fish
+        if (!bait.isEmpty() && isValidBait(bait)) {
+            entity.fishingCooldown--;
+
+            if (entity.fishingCooldown <= 0) {
                 ItemStack fish = new ItemStack(POSSIBLE_FISH.get(world.getRandom().nextInt(POSSIBLE_FISH.size())));
                 boolean inserted = false;
 
@@ -83,22 +95,27 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
                 if (inserted) {
                     bait.decrement(1);
                     entity.setStack(0, bait);
+                    entity.fishingCooldown = getNewCooldown(); // 🎣 Reset timer!
                     entity.markDirty();
                 }
             }
         }
+
     }
 
     @Override
     public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registryLookup) {
         Inventories.readNbt(nbt, this.inventory, registryLookup);
         super.readNbt(nbt, registryLookup);
+        fishingCooldown = nbt.getInt("FishingCooldown");
     }
 
     @Override
     protected void writeNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registryLookup) {
         Inventories.writeNbt(nbt, this.inventory, registryLookup);
         super.writeNbt(nbt, registryLookup);
+        nbt.putInt("FishingCooldown", fishingCooldown);
+
     }
 
     @Override
