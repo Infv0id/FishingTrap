@@ -22,11 +22,11 @@ public class FishingTrapScreenHandler extends ScreenHandler {
         this.inventory = blockEntity;
 
         // Bait Slot (centered)
-        this.addSlot(new Slot(inventory, 0, 80, 16)); // SLOT 0
+        this.addSlot(new Slot(inventory, 0, 81, 15)); // SLOT 0
 
-// Output Slots (fish) in a row under bait
-        for (int i = 0; i < 5; i++) {
-            this.addSlot(new Slot(inventory, i + 1, 44 + i * 18, 40)); // SLOTS 1–5
+        // 9 fish output slots (slots 1–9) in a horizontal row
+        for (int i = 0; i < 9; i++) {
+            this.addSlot(new Slot(inventory, i + 1, 8 + i * 18, 48));
         }
 
 

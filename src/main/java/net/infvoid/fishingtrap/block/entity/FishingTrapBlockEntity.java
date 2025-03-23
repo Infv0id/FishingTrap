@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FishingTrapBlockEntity extends BlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(6  , ItemStack.EMPTY); // One bait slot
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(10  , ItemStack.EMPTY); // One bait slot
 
     public FishingTrapBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.FISHING_TRAP_BLOCK_ENTITY, pos, state);
