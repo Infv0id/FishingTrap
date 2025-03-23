@@ -15,6 +15,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -73,35 +74,64 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
             entity.fishingCooldown--;
 
             if (entity.fishingCooldown <= 0) {
-                ItemStack fish = new ItemStack(POSSIBLE_FISH.get(world.getRandom().nextInt(POSSIBLE_FISH.size())));
-                boolean inserted = false;
+                net.minecraft.util.math.random.Random random = world.getRandom();
 
-                for (int i = 1; i <= 9; i++) {
-                    ItemStack slot = entity.getStack(i);
+                boolean caughtFish = false;
 
-                    if (slot.isEmpty()) {
-                        entity.setStack(i, fish.copy());
-                        inserted = true;
-                        break;
+                // 🎲 85% chance to catch a fish
+                if (random.nextFloat() <= 0.8f) {
+                    ItemStack fish = new ItemStack(POSSIBLE_FISH.get(random.nextInt(POSSIBLE_FISH.size())));
+
+                    for (int i = 1; i <= 9; i++) {
+                        ItemStack slot = entity.getStack(i);
+
+                        if (slot.isEmpty()) {
+                            entity.setStack(i, fish.copy());
+                            caughtFish = true;
+                            break;
+                        }
+
+                        if (slot.getItem() == fish.getItem() && slot.getCount() < slot.getMaxCount()) {
+                            slot.increment(1);
+                            caughtFish = true;
+                            break;
+                        }
                     }
 
-                    if (slot.getItem() == fish.getItem() && slot.getCount() < slot.getMaxCount()) {
-                        slot.increment(1);
-                        inserted = true;
-                        break;
+                    if (caughtFish) {
+                        bait.decrement(1);
+                        entity.setStack(0, bait);
+                        entity.markDirty();
+
+                        // ✅ Play trapdoor sound
+                        world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
+                                net.minecraft.sound.SoundCategory.BLOCKS, 1.0f, 1.0f);
                     }
                 }
 
-                if (inserted) {
+                if (!caughtFish) {
+
                     bait.decrement(1);
-                    entity.setStack(0, bait);
-                    entity.fishingCooldown = getNewCooldown(); // 🎣 Reset timer!
-                    entity.markDirty();
+                    // 🎣 Play fishing reel sound if missed
+                    world.playSound(null, pos, net.minecraft.sound.SoundEvents.ENTITY_FISHING_BOBBER_RETRIEVE,
+                            net.minecraft.sound.SoundCategory.BLOCKS, 1.0f, 1.0f);
+
+                    // 💨 Spawn poof particle at trap location
+                    if (world instanceof ServerWorld serverWorld) {
+                        serverWorld.spawnParticles(net.minecraft.particle.ParticleTypes.CLOUD,
+                                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                                5, 0.2, 0.2, 0.2, 0.01); // (count, dx, dy, dz, speed)
+                    }
                 }
+
+
+                // ⏲️ Reset cooldown no matter what
+                entity.fishingCooldown = getNewCooldown();
             }
         }
-
     }
+
+
 
     @Override
     public void readNbt(NbtCompound nbt, net.minecraft.registry.RegistryWrapper.WrapperLookup registryLookup) {
