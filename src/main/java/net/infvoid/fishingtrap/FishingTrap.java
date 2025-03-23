@@ -2,6 +2,7 @@ package net.infvoid.fishingtrap;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.infvoid.fishingtrap.block.ModBlockEntities;
 import net.infvoid.fishingtrap.block.ModBlocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ public class FishingTrap implements ModInitializer {
 	public void onInitialize() {
 
 		ModBlocks.registerModBlocks();
+		ModBlockEntities.registerModBlockEntities();
 
 
 	}

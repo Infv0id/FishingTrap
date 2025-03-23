@@ -17,7 +17,7 @@ import net.infvoid.fishingtrap.block.custom.FishingTrapBlock;
 
 public class ModBlocks {
 
-    public static final Block FISHING_TRAP = registerBlock("fishing_trap",new FishingTrapBlock(AbstractBlock.Settings.create()
+    public static final FishingTrapBlock FISHING_TRAP = registerBlock("fishing_trap",new FishingTrapBlock(AbstractBlock.Settings.create()
             .strength(0.5f)
             .nonOpaque()
             .sounds(BlockSoundGroup.WOOD)
@@ -26,7 +26,7 @@ public class ModBlocks {
     ));
 
 
-    private static Block registerBlock(String name, Block block) {
+    private static <T extends Block> T registerBlock(String name, T block) {
         registerBlockItem(name, block);
         return Registry.register(Registries.BLOCK, Identifier.of(FishingTrap.MOD_ID, name), block);
     }

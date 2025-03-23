@@ -1,6 +1,12 @@
 package net.infvoid.fishingtrap.block.custom;
 
+import com.mojang.serialization.MapCodec;
+import net.infvoid.fishingtrap.block.ModBlockEntities;
+import net.infvoid.fishingtrap.block.entity.FishingTrapBlockEntity;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.server.world.ServerWorld;
@@ -19,13 +25,39 @@ import net.minecraft.world.WorldView;
 
 
 
-public class FishingTrapBlock extends Block implements Waterloggable {
+public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
+
+
+    public static final MapCodec<FishingTrapBlock> CODEC = BlockWithEntity.createCodec(FishingTrapBlock::new);
+
+
+
+    // ✅ Create block entity
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new FishingTrapBlockEntity(pos, state);
+    }
+
+    // ✅ Ticking method with correct casting (1.21.1)
+    @SuppressWarnings("unchecked")
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return world.isClient ? null : (type == ModBlockEntities.FISHING_TRAP_BLOCK_ENTITY
+                ? (BlockEntityTicker<T>) (world1, pos, blockState, blockEntity) -> FishingTrapBlockEntity.tick(world1, pos, blockState, (FishingTrapBlockEntity) blockEntity)
+                : null);
+    }
+
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public FishingTrapBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, true));
+    }
+
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     private boolean isUnderwater(BlockView world, BlockPos pos) {
