@@ -30,6 +30,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldView;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
+
 
 
 
@@ -100,21 +103,38 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
 
     // Handle neighbor block updates
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
+                                                WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
-        world.scheduleBlockTick(pos, this, 1); // still break if water removed
+
+        // Trigger a recheck of support (chain above or solid block below)
+        world.scheduleBlockTick(pos, this, 1);
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
+
+
 
     // Break if not underwater
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (!isUnderwater(world, pos)) {
-            world.breakBlock(pos, true);
+        BlockPos belowPos = pos.down();
+        BlockPos abovePos = pos.up();
+
+        BlockState belowState = world.getBlockState(belowPos);
+        BlockState aboveState = world.getBlockState(abovePos);
+
+        boolean isWaterlogged = isUnderwater(world, pos);
+        boolean hasSupportBelow = belowState.isOpaque(); // solid block
+        boolean hasChainAbove = aboveState.isOf(Blocks.CHAIN); // hanging support
+
+        if (!isWaterlogged || (!hasSupportBelow && !hasChainAbove)) {
+            world.breakBlock(pos, true); // breaks and drops item
         }
     }
+
+
 
     // Place waterlogged if underwater
     @Override
