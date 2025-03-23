@@ -10,13 +10,13 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -161,5 +161,25 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
         }
         return ActionResult.SUCCESS;
     }
+
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof FishingTrapBlockEntity fishingTrapEntity) {
+                // Drop all items in the inventory
+                for (int i = 0; i < fishingTrapEntity.getItems().size(); i++) {
+                    ItemStack stack = fishingTrapEntity.getStack(i);
+                    if (!stack.isEmpty()) {
+                        dropStack(world, pos, stack);
+                    }
+                }
+                world.updateComparators(pos, this); // Optional: redstone comparator support
+            }
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
 
 }
