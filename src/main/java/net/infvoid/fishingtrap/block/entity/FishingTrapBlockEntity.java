@@ -51,12 +51,21 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
     private static final List<Item> POSSIBLE_FISH = new ArrayList<>();
 
     static {
-        for (int i = 0; i < 96; i++) {
+        for (int i = 0; i < 130; i++) {
             POSSIBLE_FISH.add(Items.COD);
             POSSIBLE_FISH.add(Items.SALMON);
         }
         for (int i = 0; i < 1; i++) {
-            POSSIBLE_FISH.add(Items.TROPICAL_FISH);
+            POSSIBLE_FISH.add(Items.DIAMOND);
+            POSSIBLE_FISH.add(Items.EMERALD);
+
+
+        }
+        for (int i = 0; i < 5; i++) {
+            POSSIBLE_FISH.add(Items.COAL);
+            POSSIBLE_FISH.add(Items.LEATHER);
+            POSSIBLE_FISH.add(Items.LEATHER_CHESTPLATE);
+            POSSIBLE_FISH.add(Items.IRON_INGOT);
         }
     }
 
