@@ -64,7 +64,6 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
         for (int i = 0; i < 5; i++) {
             POSSIBLE_FISH.add(Items.COAL);
             POSSIBLE_FISH.add(Items.LEATHER);
-            POSSIBLE_FISH.add(Items.LEATHER_CHESTPLATE);
             POSSIBLE_FISH.add(Items.IRON_INGOT);
         }
     }
