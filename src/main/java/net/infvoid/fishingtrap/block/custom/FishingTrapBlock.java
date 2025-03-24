@@ -93,12 +93,13 @@ public class FishingTrapBlock extends BlockWithEntity implements Waterloggable {
     // Placement condition
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return isUnderwater(world, pos);
+        return true;
     }
+
 
     @Override
     public boolean canReplace(BlockState state, net.minecraft.item.ItemPlacementContext context) {
-        return isUnderwater(context.getWorld(), context.getBlockPos()) && super.canReplace(state, context);
+        return true;
     }
 
     // Handle neighbor block updates

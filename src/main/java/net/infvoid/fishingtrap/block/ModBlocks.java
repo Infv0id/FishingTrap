@@ -1,9 +1,11 @@
 package net.infvoid.fishingtrap.block;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.infvoid.fishingtrap.FishingTrap;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -16,6 +18,14 @@ import net.infvoid.fishingtrap.block.custom.FishingTrapBlock;
 
 
 public class ModBlocks {
+
+
+    public static final Block FISHING_TRAP_CHAIN = registerBlock(
+            "fishing_trap_chain",
+            new Block(FabricBlockSettings.copyOf(Blocks.CHAIN))
+    );
+
+
 
     public static final FishingTrapBlock FISHING_TRAP = registerBlock("fishing_trap",new FishingTrapBlock(AbstractBlock.Settings.create()
             .strength(0.5f)

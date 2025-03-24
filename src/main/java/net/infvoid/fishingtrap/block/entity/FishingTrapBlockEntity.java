@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -67,6 +68,8 @@ public class FishingTrapBlockEntity extends BlockEntity implements ImplementedIn
 
     public static void tick(World world, BlockPos pos, BlockState state, FishingTrapBlockEntity entity) {
         if (world.isClient()) return;
+
+        if (!world.getFluidState(pos).isOf(Fluids.WATER)) return;
 
         ItemStack bait = entity.getStack(0);
 
