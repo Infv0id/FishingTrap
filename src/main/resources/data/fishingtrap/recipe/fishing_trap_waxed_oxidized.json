@@ -7,16 +7,15 @@
       "item": "minecraft:copper_ingot"
     },
     "*": {
-      "item": "minecraft:oxidized_cut_copper_slab"
+      "item": "minecraft:waxed_oxidized_cut_copper_slab"
     },
     "$": {
       "item": "minecraft:iron_ingot"
     },
     "&": {
-      "item": "minecraft:oxidized_copper_trapdoor"
+      "item": "minecraft:waxed_oxidized_copper_trapdoor"
     }
   },
-
 
   "pattern": [
     " $ ",
@@ -27,6 +26,5 @@
   "result": {
     "count": 1,
     "id": "fishingtrap:fishing_trap"
-
   }
 }
